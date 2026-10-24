@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS HUD</title>
+    <style>
+        body {
+            background-color: #050b14;
+            color: #00d2ff;
+            font-family: monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .jarvis-core {
+            width: 150px;
+            height: 150px;
+            border: 3px solid #00d2ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+            transition: all 0.1s ease;
+        }
+        .glitch {
+            animation: glitchEffect 0.2s infinite;
+        }
+        @keyframes glitchEffect {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); filter: hue-rotate(90deg); }
+            40% { transform: translate(-3px, -3px); }
+            60% { transform: translate(3px, 3px); }
+            80% { transform: translate(3px, -3px); }
+            100% { transform: translate(0); }
+        }
+        .inner-box {
+            width: 80px;
+            height: 80px;
+            border: 2px dashed #ff0055;
+        }
+        #status {
+            margin-top: 30px;
+            font-size: 16px;
+            letter-spacing: 2px;
+        }
+        button {
+            margin-top: 20px;
+            background: transparent;
+            border: 1px solid #00d2ff;
+            color: #00d2ff;
+            padding: 10px 20px;
+            font-family: monospace;
+            cursor: pointer;
+            letter-spacing: 1px;
+        }
+        button:active {
+            background: #00d2ff;
+            color: #050b14;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="jarvis-core" id="core">
+        <div class="inner-box"></div>
+    </div>
+    
+    <div id="status">SISTEMA IN ATTESA</div>
+    <button onclick="attivaJarvis()">ATTIVA JARVIS</button>
+
+    <script>
+        const core = document.getElementById('core');
+        const statusText = document.getElementById('status');
+
+        function parla(testo) {
+            const synth = window.speechSynthesis;
+            const utterThis = new SpeechSynthesisUtterance(testo);
+            utterThis.lang = 'it-IT';
+            
+            utterThis.onstart = () => {
+                core.classList.add('glitch');
+                statusText.innerText = "ELABORAZIONE...";
+            };
+            
+            utterThis.onend = () => {
+                core.classList.remove('glitch');
+                statusText.innerText = "PRONTO";
+            };
+
+            synth.speak(utterThis);
+        }
+
+        function attivaJarvis() {
+            statusText.innerText = "ATTIVATO";
+            parla("Buongiorno signore. Sistemi online e operativi.");
+        }
+    </script>
+</body>
+</html>
