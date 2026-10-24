@@ -89,7 +89,7 @@
         const core = document.getElementById('core');
         const statusText = document.getElementById('status');
 
-        function parla(testo, callback) {
+        function parla(testo) {
             const synth = window.speechSynthesis;
             const utterThis = new SpeechSynthesisUtterance(testo);
             utterThis.lang = 'it-IT';
@@ -101,7 +101,6 @@
             
             utterThis.onend = () => {
                 core.classList.remove('glitch');
-                if (callback) callback();
             };
 
             synth.speak(utterThis);
@@ -128,9 +127,14 @@
                 const comando = event.results[0][0].transcript.toLowerCase();
                 statusText.innerText = "HAI DETTO: \"" + comando.toUpperCase() + "\"";
                 
-                // Gestione dei comandi vocali
+                // Riconoscimento dei comandi
                 if (comando.includes("ciao") || comando.includes("jarvis")) {
                     parla("Buongiorno signore. Come posso esserle utile?");
+                } else if (comando.includes("ore") || comando.includes("ora")) {
+                    const oraAttuale = new Date();
+                    const ore = oraAttuale.getHours();
+                    const minuti = oraAttuale.getMinutes();
+                    parla("Sono le ore " + ore e minuti + ", signore.");
                 } else if (comando.includes("stato")) {
                     parla("Tutti i sistemi di bordo sono pienamente operativi e protetti.");
                 } else {
@@ -138,7 +142,7 @@
                 }
             };
 
-            recognition.onerror = (event) => {
+            recognition.onerror = () => {
                 core.classList.remove('listening');
                 statusText.innerText = "ERRORE AUDIO";
             };
@@ -150,10 +154,10 @@
             recognition.start();
         }
 
-        // Messaggio di benvenuto iniziale
         window.onload = () => {
             parla("Sistemi online e operativi.");
         };
     </script>
 </body>
 </html>
+
